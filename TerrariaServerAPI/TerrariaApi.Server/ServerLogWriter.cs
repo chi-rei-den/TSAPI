@@ -22,7 +22,7 @@ namespace TerrariaApi.Server
 			{
 				try {
 					Console.ForegroundColor = ConsoleColor.Red;
-					Console.WriteLine("Fatal startup exception. Could not write to \"{0}\". Exception details:\n{1}", logFilePath, ex);
+					Console.WriteLine("启动期间发生致命异常，无法写入\"{0}\"。异常详情：\n{1}", logFilePath, ex);
 				} finally {
 					Console.ForegroundColor = ConsoleColor.Gray;
 				}

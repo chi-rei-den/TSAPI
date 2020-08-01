@@ -18,7 +18,7 @@ namespace TerrariaApi.Server
 		{
 			try
 			{
-				Console.WriteLine("TerrariaAPI Version: {0} (Protocol {1} ({2}), OTAPI {3})",
+				Console.WriteLine("TerrariaAPI版本：{0} (游戏协议版本{1} (内部代码号{2}), OTAPI {3})",
 					ServerApi.ApiVersion,
 					Main.versionNumber2,
 					Main.curRelease,
@@ -29,7 +29,7 @@ namespace TerrariaApi.Server
 			catch (Exception ex)
 			{
 				ServerApi.LogWriter.ServerWriteLine(
-					"Startup aborted due to an exception in the Server API initialization:\n" + ex, TraceLevel.Error);
+					"初始化期间出现异常，无法加载：\n" + ex, TraceLevel.Error);
 
 				Console.ReadLine();
 				return;

@@ -352,12 +352,12 @@ namespace TerrariaApi.Server
 				{
 					// Broken plugins better stop the entire server init.
 					throw new InvalidOperationException(string.Format(
-						"Plugin \"{0}\" has thrown an exception during initialization.", current.Plugin.Name), ex);
+						"插件\"{0}\"在初始化期间出现异常。", current.Plugin.Name), ex);
 				}
 
 				initTimeWatch.Stop();
 				LogWriter.ServerWriteLine(string.Format(
-					"Plugin {0} v{1} (by {2}) initiated.", current.Plugin.Name, current.Plugin.Version, current.Plugin.Author),
+					"插件 {0} v{1} (作者 {2}) 加载完毕。", current.Plugin.Name, current.Plugin.Version, current.Plugin.Author),
 					TraceLevel.Info);
 			}
 

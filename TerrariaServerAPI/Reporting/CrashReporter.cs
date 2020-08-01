@@ -34,24 +34,23 @@ namespace TerrariaApi.Reporting
 		internal void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
 			ServerApi.LogWriter.ServerWriteLine("===================================================================================", TraceLevel.Error);
-			ServerApi.LogWriter.ServerWriteLine("An unhandled exception has occured in TSAPI, and a crash report will be generated", TraceLevel.Error);
-			ServerApi.LogWriter.ServerWriteLine("Generating a crash report, please wait...", TraceLevel.Error);
+			ServerApi.LogWriter.ServerWriteLine("TSAPI出现无法处理的异常，正在生成诊断信息...", TraceLevel.Error);
 
 			try
 			{
 				string path = CollectCrashReport(e.ExceptionObject as Exception);
-				ServerApi.LogWriter.ServerWriteLine("Crash report saved at " + path, TraceLevel.Error);
+				ServerApi.LogWriter.ServerWriteLine("已保存至" + path, TraceLevel.Error);
 			}
 			catch
 			{
-				ServerApi.LogWriter.ServerWriteLine("Could not generate a crash report.", TraceLevel.Error);
+				ServerApi.LogWriter.ServerWriteLine("无法保存异常信息。", TraceLevel.Error);
 			}
 			finally
 			{
-				ServerApi.LogWriter.ServerWriteLine("Please upload the crash file and report it at http://tshock.co/", TraceLevel.Error);
+				ServerApi.LogWriter.ServerWriteLine("建议将诊断信息提交给TShock开发人员。", TraceLevel.Error);
 				if (e.IsTerminating)
 				{
-					ServerApi.LogWriter.ServerWriteLine("The process will terminate.", TraceLevel.Error);
+					ServerApi.LogWriter.ServerWriteLine("本程序将立即终止。", TraceLevel.Error);
 				}
 				ServerApi.LogWriter.ServerWriteLine("===================================================================================", TraceLevel.Error);
 			}

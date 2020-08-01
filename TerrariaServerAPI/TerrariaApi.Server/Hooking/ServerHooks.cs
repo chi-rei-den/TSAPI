@@ -25,7 +25,7 @@ namespace TerrariaApi.Server.Hooking
 		{
 			if (Console.IsInputRedirected == true)
 			{
-				Console.WriteLine("TerrariaServer is running in the background and input is disabled.");
+				Console.WriteLine("TerrariaServer正在后台运行，已自动忽略命令行输入。");
 				return HookResult.Cancel;
 			}
 

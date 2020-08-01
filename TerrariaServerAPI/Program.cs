@@ -94,7 +94,7 @@ namespace TerrariaApi.Server
 			}
 			catch (Exception ex)
 			{
-				ServerApi.LogWriter.ServerWriteLine("Server crashed due to an unhandled exception:\n" + ex, TraceLevel.Error);
+				ServerApi.LogWriter.ServerWriteLine("服务器出现无法处理的异常：\n" + ex, TraceLevel.Error);
 			}
 		}
 
