@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using OTAPI;
 using Terraria;
 using Terraria.Net;
 
@@ -42,9 +43,10 @@ namespace TerrariaApi.Server
 			if (args.Any(x => x == "-heaptile"))
 			{
 				ServerApi.LogWriter.ServerWriteLine($"Using {nameof(HeapTile)} for tile implementation", TraceLevel.Info);
-				OTAPI.Hooks.Tile.CreateCollection = () =>
+
+				ModFramework.DefaultCollection<ITile>.OnCreateCollection += (width, height, _) =>
 				{
-					return new TileProvider();
+					return new TileProvider(width, height);
 				};
 			}
 
@@ -419,7 +421,7 @@ namespace TerrariaApi.Server
 					Netplay.Clients[buffer.whoAmI].PendingTermination = true;
 					return true;
 				}
-				
+
 				switch ((PacketTypes)msgId)
 				{
 					case PacketTypes.ConnectRequest:
@@ -747,35 +749,34 @@ namespace TerrariaApi.Server
 			get { return this.npcLootDrop; }
 		}
 
-		internal bool InvokeNpcLootDrop(
-			ref Vector2 position, ref int w, ref int h, ref int itemId, ref int stack, ref bool broadcast, ref int prefix,
-			int npcId, int npcArrayIndex, ref bool nodelay, ref bool reverseLookup)
+		internal bool InvokeNpcLootDrop(Hooks.NPC.DropLootEventArgs otapiArgs)
 		{
 			NpcLootDropEventArgs args = new NpcLootDropEventArgs
 			{
-				Position = position,
-				Width = w,
-				Height = h,
-				ItemId = itemId,
-				Stack = stack,
-				Broadcast = broadcast,
-				Prefix = prefix,
-				NpcId = npcId,
-				NpcArrayIndex = npcArrayIndex,
-				NoGrabDelay = nodelay,
-				ReverseLookup = reverseLookup
+				Position = new Vector2(otapiArgs.X, otapiArgs.Y),
+				Width = otapiArgs.Width,
+				Height = otapiArgs.Height,
+				ItemId = otapiArgs.Type,
+				Stack = otapiArgs.Stack,
+				Broadcast = !otapiArgs.NoBroadcast,
+				Prefix = otapiArgs.Pfix,
+				NpcId = otapiArgs.Npc.type,
+				NpcArrayIndex = otapiArgs.Npc.whoAmI,
+				NoGrabDelay = otapiArgs.NoGrabDelay,
+				ReverseLookup = otapiArgs.ReverseLookup
 			};
 
 			this.NpcLootDrop.Invoke(args);
 
-			position = args.Position;
-			w = args.Width;
-			h = args.Height;
-			itemId = args.ItemId;
-			stack = args.Stack;
-			broadcast = args.Broadcast;
-			prefix = args.Prefix;
-			nodelay = args.NoGrabDelay;
+			otapiArgs.X = (int) args.Position.X;
+			otapiArgs.Y = (int) args.Position.Y;
+			otapiArgs.Width = args.Width;
+			otapiArgs.Height = args.Height;
+			otapiArgs.Type = args.ItemId;
+			otapiArgs.Stack = args.Stack;
+			otapiArgs.NoBroadcast = !args.Broadcast;
+			otapiArgs.Pfix = args.Prefix;
+			otapiArgs.NoGrabDelay = args.NoGrabDelay;
 			return args.Handled;
 		}
 		#endregion
@@ -813,34 +814,34 @@ namespace TerrariaApi.Server
 			get { return this.dropBossBag; }
 		}
 
-		internal bool InvokeDropBossBag(ref Vector2 position, ref int w, ref int h, ref int itemId, ref int stack, ref bool broadcast, ref int prefix,
-			int npcId, int npcArrayIndex, ref bool nodelay, ref bool reverseLookup)
+		internal bool InvokeDropBossBag(Hooks.NPC.BossBagEventArgs otapiArgs)
 		{
 			DropBossBagEventArgs args = new DropBossBagEventArgs
 			{
-				Position = position,
-				Width = w,
-				Height = h,
-				ItemId = itemId,
-				Stack = stack,
-				Broadcast = broadcast,
-				Prefix = prefix,
-				NpcId = npcId,
-				NpcArrayIndex = npcArrayIndex,
-				NoGrabDelay = nodelay,
-				ReverseLookup = reverseLookup
+				Position = new Vector2(otapiArgs.X, otapiArgs.Y),
+				Width = otapiArgs.Width,
+				Height = otapiArgs.Height,
+				ItemId = otapiArgs.Type,
+				Stack = otapiArgs.Stack,
+				Broadcast = !otapiArgs.NoBroadcast,
+				Prefix = otapiArgs.Pfix,
+				NpcId = otapiArgs.Npc.type,
+				NpcArrayIndex = otapiArgs.Npc.whoAmI,
+				NoGrabDelay = otapiArgs.NoGrabDelay,
+				ReverseLookup = otapiArgs.ReverseLookup
 			};
 
 			this.DropBossBag.Invoke(args);
 
-			position = args.Position;
-			w = args.Width;
-			h = args.Height;
-			itemId = args.ItemId;
-			stack = args.Stack;
-			broadcast = args.Broadcast;
-			prefix = args.Prefix;
-			nodelay = args.NoGrabDelay;
+			otapiArgs.X = (int) args.Position.X;
+			otapiArgs.Y = (int) args.Position.Y;
+			otapiArgs.Width = args.Width;
+			otapiArgs.Height = args.Height;
+			otapiArgs.Type = args.ItemId;
+			otapiArgs.Stack = args.Stack;
+			otapiArgs.NoBroadcast = !args.Broadcast;
+			otapiArgs.Pfix = args.Prefix;
+			otapiArgs.NoGrabDelay = args.NoGrabDelay;
 			return args.Handled;
 		}
 

@@ -15,36 +15,34 @@ namespace TerrariaApi.Server.Hooking
 		{
 			_hookManager = hookManager;
 
-			Hooks.Item.PreSetDefaultsById = OnPreSetDefaultsById;
-			Hooks.Item.PreNetDefaults = OnPreNetDefaults;
-			Hooks.Chest.QuickStack = OnQuickStack;
+			On.Terraria.Item.SetDefaults_int_bool += OnSetDefaultsById;
+			On.Terraria.Item.netDefaults += OnNetDefaults;
+
+			Hooks.Chest.QuickStack += OnQuickStack;
 		}
 
-		static HookResult OnPreSetDefaultsById(Item item, ref int type, ref bool noMatCheck)
+		private static void OnSetDefaultsById(On.Terraria.Item.orig_SetDefaults_int_bool orig, Item self, int type, bool check)
 		{
-			if (_hookManager.InvokeItemSetDefaultsInt(ref type, item))
+			if (!_hookManager.InvokeItemSetDefaultsInt(ref type, self))
 			{
-				return HookResult.Cancel;
+				orig(self, type, check);
 			}
-			return HookResult.Continue;
 		}
 
-		static HookResult OnPreNetDefaults(Item item, ref int type)
+		private static void OnNetDefaults(On.Terraria.Item.orig_netDefaults orig, Item self, int type)
 		{
-			if (_hookManager.InvokeItemNetDefaults(ref type, item))
+			if (!_hookManager.InvokeItemNetDefaults(ref type, self))
 			{
-				return HookResult.Cancel;
+				orig(self, type);
 			}
-			return HookResult.Continue;
 		}
 
-		static HookResult OnQuickStack(int playerId, Item item, int chestIndex)
+		private static void OnQuickStack(object sender, Hooks.Chest.QuickStackEventArgs args)
 		{
-			if (_hookManager.InvokeItemForceIntoChest(Main.chest[chestIndex], item, Main.player[playerId]))
+			if (_hookManager.InvokeItemForceIntoChest(Main.chest[args.ChestIndex], args.Item, Main.player[args.PlayerId]))
 			{
-				return HookResult.Cancel;
+				args.Result = HookResult.Cancel;
 			}
-			return HookResult.Continue;
 		}
 	}
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Terraria;
 
 namespace TerrariaApi.Server
 {
@@ -12,7 +13,7 @@ namespace TerrariaApi.Server
     /// Provides an abstraction layer between Terraria's tile mechanism and the various mechanisms that
     /// provide the data to TSAPI.
     /// </summary>
-    public class TileProvider : OTAPI.Tile.ITileCollection
+    public class TileProvider : ModFramework.ICollection<ITile>
     {
         /// <summary>
         /// Holds the tile heap.
@@ -25,6 +26,7 @@ namespace TerrariaApi.Server
         protected HeapTile lastTile;
 
         protected readonly object syncRoot = new object();
+
 
         public int Width { get; private set; }
 
@@ -39,20 +41,18 @@ namespace TerrariaApi.Server
         /// <returns>
         /// A Terraria.Tile instance of the tile at the X and Y coordinate
         /// </returns>
-        public OTAPI.Tile.ITile this[int x, int y]
+        public ITile this[int x, int y]
         {
             get
             {
 				if (tileHeap == null)
                 {
-                    this.Width = Terraria.Main.maxTilesX;
-                    this.Height = Terraria.Main.maxTilesY;
                     /*
                      * The checker must be null here, because Main.maxTilesX is always
                      * initialized to the large world size, wasting RAM for smaller
                      * and medium maps.
                      */
-                    tileHeap = new byte[HeapTile.kHeapTileSize * ((Terraria.Main.maxTilesX + 1) * (Terraria.Main.maxTilesY + 1))];
+                    tileHeap = new byte[HeapTile.kHeapTileSize * (Width + 1) * (Height + 1)];
                 }
 
                 return GetTile(x, y);
@@ -61,6 +61,12 @@ namespace TerrariaApi.Server
             {
                 SetTile(value, x, y);
             }
+        }
+
+        public TileProvider(int width, int height)
+        {
+	        Width = width;
+	        Height = height;
         }
 
         /// <summary>
@@ -74,7 +80,7 @@ namespace TerrariaApi.Server
         /// <remarks>
         /// Virtual function that derivatives must override if they want to implement getting of a tile from
         /// its backing store.        /// </remarks>
-        protected virtual OTAPI.Tile.ITile GetTile(int x, int y)
+        protected virtual ITile GetTile(int x, int y)
         {
             HeapTile tile;
 
@@ -102,7 +108,7 @@ namespace TerrariaApi.Server
         /// Virtual function that derivatives must override if they want to implement getting of a tile from
         /// its backing store.
         /// </remarks>
-        protected virtual void SetTile(OTAPI.Tile.ITile tile, int x, int y)
+        protected virtual void SetTile(ITile tile, int x, int y)
         {
             HeapTile heapTile = new HeapTile(tileHeap, x, y);
             heapTile.CopyFrom(tile);

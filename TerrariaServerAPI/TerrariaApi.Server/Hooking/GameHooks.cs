@@ -15,50 +15,64 @@ namespace TerrariaApi.Server.Hooking
 		{
 			_hookManager = hookManager;
 
-			Hooks.Game.PreUpdate = OnPreUpdate;
-			Hooks.Game.PostUpdate = OnPostUpdate;
-			Hooks.World.HardmodeTileUpdate = OnHardmodeTileUpdate;
-			Hooks.Game.PreInitialize = OnPreInitialize;
-			Hooks.Game.Started = OnStarted;
-			Hooks.World.Statue = OnStatue;
+			On.Terraria.Main.Initialize += OnInitialize;
+			On.Terraria.Main.Update += OnUpdate;
+
+			Hooks.WorldGen.HardmodeTileUpdate += OnHardmodeTileUpdate;
+			Hooks.NPC.MechSpawn += OnNpcMechSpawn;
+			Hooks.Item.MechSpawn += OnItemMechSpawn;
 		}
 
-		static void OnPreUpdate(ref GameTime gameTime)
-		{
-			_hookManager.InvokeGameUpdate();
-		}
-
-		static void OnPostUpdate(ref GameTime gameTime)
-		{
-			_hookManager.InvokeGamePostUpdate();
-		}
-		static HardmodeTileUpdateResult OnHardmodeTileUpdate(int x, int y, ref ushort type)
-		{
-			if (_hookManager.InvokeGameHardmodeTileUpdate(x, y, type))
-			{
-				return HardmodeTileUpdateResult.Cancel;
-			}
-			return HardmodeTileUpdateResult.Continue;
-		}
-
-		static void OnPreInitialize()
+		private static void OnInitialize(On.Terraria.Main.orig_Initialize orig, Terraria.Main self)
 		{
 			HookManager.InitialiseAPI();
 			_hookManager.InvokeGameInitialize();
+			orig(self);
 		}
 
-		static void OnStarted()
+		private static void OnUpdate(On.Terraria.Main.orig_Update orig, Terraria.Main self, GameTime time)
 		{
-			_hookManager.InvokeGamePostInitialize();
+			_hookManager.InvokeGameUpdate();
+			orig(self, time);
+			_hookManager.InvokeGamePostUpdate();
 		}
 
-		static HookResult OnStatue(StatueType caller, float x, float y, int type, ref int num, ref int num2, ref int num3)
+		private static void OnHardmodeTileUpdate(object sender, Hooks.WorldGen.HardmodeTileUpdateEventArgs args)
 		{
-			if (_hookManager.InvokeGameStatueSpawn(num2, num3, num, (int)(x / 16f), (int)(y / 16f), type, caller == StatueType.Npc))
+			if (_hookManager.InvokeGameHardmodeTileUpdate(args.X, args.Y, args.Type))
 			{
-				return HookResult.Continue;
+				args.Result = HookResult.Cancel;
 			}
-			return HookResult.Cancel;
+		}
+
+		private static void OnNpcMechSpawn(object sender, Hooks.NPC.MechSpawnEventArgs args)
+		{
+			if (_hookManager.InvokeGameStatueSpawn(
+				args.Num2,
+				args.Num3,
+				args.Num,
+				(int)(args.X / 16f),
+				(int)(args.Y / 16f),
+				args.Type,
+				true))
+			{
+				args.Result = HookResult.Cancel;
+			}
+		}
+
+		private static void OnItemMechSpawn(object sender, Hooks.Item.MechSpawnEventArgs args)
+		{
+			if (_hookManager.InvokeGameStatueSpawn(
+				args.Num2,
+				args.Num3,
+				args.Num,
+				(int)(args.X / 16f),
+				(int)(args.Y / 16f),
+				args.Type,
+				false))
+			{
+				args.Result = HookResult.Cancel;
+			}
 		}
 	}
 }

@@ -15,16 +15,20 @@ namespace TerrariaApi.Server.Hooking
 		{
 			_hookManager = hookManager;
 
-			Hooks.Wiring.AnnouncementBox = OnAnnouncementBox;
+			Hooks.Wiring.AnnouncementBox += OnAnnouncementBox;
 		}
 
-		static HookResult OnAnnouncementBox(int x, int y, int signId)
+		private static void OnAnnouncementBox(object sender, Hooks.Wiring.AnnouncementBoxEventArgs args)
 		{
-			if (_hookManager.InvokeWireTriggerAnnouncementBox(Wiring.CurrentUser, x, y, signId, Main.sign[signId].text))
+			if (_hookManager.InvokeWireTriggerAnnouncementBox(
+				Wiring.CurrentUser,
+				args.X,
+				args.Y,
+				args.SignId,
+				Main.sign[args.SignId].text))
 			{
-				return HookResult.Cancel;
+				args.Result = HookResult.Cancel;
 			}
-			return HookResult.Continue;
 		}
 	}
 }
