@@ -109,10 +109,11 @@ namespace TerrariaApi.Server
 				}
 			}
 
+#if NETSTANDARD2_0
 			// Add assembly resolver instructing it to use the server plugins directory as a search path.
 			// TODO: Either adding the server plugins directory to PATH or as a privatePath node in the assembly config should do too.
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
+#endif
 			LoadPlugins();
 		}
 
@@ -294,18 +295,27 @@ namespace TerrariaApi.Server
 				try
 				{
 					Assembly assembly;
+#if !NETSTANDARD2_0
+					PluginLoadContext context = null;
+#endif
 					// The plugin assembly might have been resolved by another plugin assembly already, so no use to
 					// load it again, but we do still have to verify it and create plugin instances.
 					if (!loadedAssemblies.TryGetValue(fileNameWithoutExtension, out assembly))
 					{
 						try
 						{
+#if !NETSTANDARD2_0
+							context = new PluginLoadContext(fileInfo.FullName);
+							assembly = context.LoadFromAssemblyName(AssemblyName.GetAssemblyName(fileInfo.FullName));
+#else
 							assembly = Assembly.Load(File.ReadAllBytes(fileInfo.FullName));
+#endif
 						}
 						catch (BadImageFormatException)
 						{
 							continue;
 						}
+
 						loadedAssemblies.Add(fileNameWithoutExtension, assembly);
 					}
 
