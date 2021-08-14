@@ -20,6 +20,8 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseUrl>https://licenses.nuget.org/GPL-3.0-or-later</PackageLicenseUrl>
+		<VersionSuffix>$(VersionSuffix)</VersionSuffix>
+		<PackageVersion>$([System.DateTime]::Now.ToString(&quot;yyyy.MM.dd.HHmmss&quot;))</PackageVersion>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="tshock_logo.ico" />
