@@ -34,6 +34,8 @@ namespace TerrariaApi.Server.Hooking
 				}
 				_hookManager.InvokeServerSocketReset(remoteClient);
 			}
+
+			orig(remoteClient);
 		}
 
 		private static void OnCommandProcess(object sender, Hooks.Main.CommandProcessEventArgs args)

@@ -60,10 +60,7 @@ namespace TerrariaApi.Server.Hooking
 			int slot = FindNextOpenClientSlot();
 			if (slot != -1)
 			{
-				// Netplay.Clients[slot].Reset();
-				Netplay.Clients[slot].orig_Reset();
-				Netplay.Clients[slot].Data.Clear();
-
+				Netplay.Clients[slot].Reset();
 				Netplay.Clients[slot].Socket = client;
 			}
 
