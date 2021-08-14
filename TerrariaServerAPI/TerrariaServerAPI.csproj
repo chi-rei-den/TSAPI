@@ -4,7 +4,7 @@
 		<Company>Re-Logic &amp; The TShock Team</Company>
 		<Copyright>Copyright © Re-Logic 2017</Copyright>
 		<Product>Terraria</Product>
-		<Title>Terraria</Title>
+		<Title>TSAPI</Title>
 		<AssemblyName>TerrariaServerApi</AssemblyName>
 		<RootNamespace>TerrariaApi.Server</RootNamespace>
 		<AssemblyVersion>1.4.2.3</AssemblyVersion>
@@ -12,6 +12,15 @@
 		<Configurations>Debug;Release</Configurations>
 		<Platforms>AnyCPU</Platforms>
 		<TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
+		<PackageId>Chireiden.TSAPI</PackageId>
+		<Authors>Pryaxis &amp; Chireiden</Authors>
+		<Description>TSAPI with upcoming OTAPI</Description>
+		<PackageProjectUrl>https://github.com/chi-rei-den/TSAPI</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/chi-rei-den/TSAPI</RepositoryUrl>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageVersion>1.4.2.3-1</PackageVersion>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseUrl>https://licenses.nuget.org/GPL-3.0-or-later</PackageLicenseUrl>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="tshock_logo.ico" />
@@ -19,7 +28,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="OTAPI.Upcoming" Version="3.0.20-alpha" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
 		<PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.1" />
 	</ItemGroup>
 </Project>
