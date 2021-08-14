@@ -11,8 +11,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Configurations>Debug;Release</Configurations>
 		<Platforms>AnyCPU</Platforms>
-		<TargetFramework>net5.0</TargetFramework>
-		<OutputType>Exe</OutputType>
+		<TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="tshock_logo.ico" />
@@ -20,9 +19,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="OTAPI.Upcoming" Version="3.0.20-alpha" />
-<!--		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />-->
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.1" />
-<!--		<PackageReference Include="System.IO.Compression" Version="4.3.0" />-->
-<!--		<PackageReference Include="System.IO.Packaging" Version="5.0.0" />-->
 	</ItemGroup>
 </Project>

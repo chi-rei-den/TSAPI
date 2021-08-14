@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net472;net5.0</TargetFrameworks>
+        <AssemblyName>TerrariaServer</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TerrariaServerAPI\TerrariaServerAPI.csproj" />
+    </ItemGroup>
+
+</Project>

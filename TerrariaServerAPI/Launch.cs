@@ -6,7 +6,7 @@ using TerrariaApi.Server;
 
 namespace TerrariaApi.Server
 {
-	class Program
+	public class Launch
 	{
 		/// <summary>
 		/// Initialises any internal values before any server initialisation begins
