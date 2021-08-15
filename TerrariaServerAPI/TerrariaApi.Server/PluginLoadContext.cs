@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 
 #if !NETSTANDARD2_0
@@ -27,6 +28,13 @@ namespace TerrariaApi.Server
 			catch (Exception _)
 			{
 				// ignored
+			}
+
+			if ((assembly = ServerApi.Plugins.FirstOrDefault(p =>
+				p.Plugin.GetType().Assembly.GetName().Name == assemblyName.Name)
+				?.Plugin.GetType().Assembly) != null)
+			{
+				return assembly;
 			}
 
 			string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);

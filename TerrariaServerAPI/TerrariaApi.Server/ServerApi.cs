@@ -20,7 +20,9 @@ namespace TerrariaApi.Server
 
 		public static readonly Version ApiVersion = new Version(2, 1, 0, 0);
 		private static Main game;
+#if NETSTANDARD2_0
 		private static readonly Dictionary<string, Assembly> loadedAssemblies = new Dictionary<string, Assembly>();
+#endif
 		private static readonly List<PluginContainer> plugins = new List<PluginContainer>();
 
 		internal static readonly CrashReporter reporter = new CrashReporter();
@@ -297,16 +299,20 @@ namespace TerrariaApi.Server
 					Assembly assembly;
 #if !NETSTANDARD2_0
 					PluginLoadContext context = null;
+					var assemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
 #endif
+
+#if NETSTANDARD2_0
 					// The plugin assembly might have been resolved by another plugin assembly already, so no use to
 					// load it again, but we do still have to verify it and create plugin instances.
 					if (!loadedAssemblies.TryGetValue(fileNameWithoutExtension, out assembly))
 					{
+#endif
 						try
 						{
 #if !NETSTANDARD2_0
 							context = new PluginLoadContext(fileInfo.FullName);
-							assembly = context.LoadFromAssemblyName(AssemblyName.GetAssemblyName(fileInfo.FullName));
+							assembly = context.LoadFromAssemblyName(assemblyName);
 #else
 							assembly = Assembly.Load(File.ReadAllBytes(fileInfo.FullName));
 #endif
@@ -316,9 +322,10 @@ namespace TerrariaApi.Server
 							continue;
 						}
 
+#if NETSTANDARD2_0
 						loadedAssemblies.Add(fileNameWithoutExtension, assembly);
 					}
-
+#endif
 					if (!InvalidateAssembly(assembly, fileInfo.Name))
 						continue;
 
@@ -461,6 +468,7 @@ namespace TerrariaApi.Server
 			}
 		}
 
+#if NETSTANDARD2_0
 		private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
 		{
 			string fileName = args.Name.Split(',')[0];
@@ -492,6 +500,7 @@ namespace TerrariaApi.Server
 			}
 			return null;
 		}
+#endif
 
 		// Many types have changed with 1.14 and thus we won't even be able to check the ApiVersionAttribute of
 		// plugin classes of assemblies targeting a TerrariaServer prior 1.14 as they can not be loaded at all.

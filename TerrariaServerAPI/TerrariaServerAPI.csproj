@@ -17,11 +17,10 @@
 		<Description>TSAPI with upcoming OTAPI</Description>
 		<PackageProjectUrl>https://github.com/chi-rei-den/TSAPI</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/chi-rei-den/TSAPI</RepositoryUrl>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseUrl>https://licenses.nuget.org/GPL-3.0-or-later</PackageLicenseUrl>
 		<VersionSuffix>$(VersionSuffix)</VersionSuffix>
-		<PackageVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmmss"))</PackageVersion>
+		<PackageVersion>$([System.DateTime]::Now.ToString("yyyy.MM.ddHHmmss"))</PackageVersion>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="tshock_logo.ico" />
