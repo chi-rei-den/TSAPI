@@ -91,9 +91,9 @@ namespace TerrariaApi.Server
 				"\tMono: " + RunningMono, TraceLevel.Verbose);
 
 			ServerApi.game = game;
-			HandleCommandLine(commandLineArgs);
 			ServerPluginsDirectoryPath = Path.Combine(
 				Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), PluginsPath);
+			HandleCommandLine(commandLineArgs);
 
 			if (!Directory.Exists(ServerPluginsDirectoryPath))
 			{
@@ -264,6 +264,9 @@ namespace TerrariaApi.Server
 						}
 					case "-crashdir":
 						CrashReporter.crashReportPath = arg.Value;
+						break;
+					case "-plugindir":
+						ServerPluginsDirectoryPath = arg.Value;
 						break;
 				}
 			}
